@@ -1,7 +1,6 @@
-from simple_websocket_server import WebSocket
+from simple_websocket_server import WebSocket, WebSocketServer
 import json
 import numbers
-from simple_websocket_server import WebSocketServer
 from files.consts import WS_PORT
 import os
 
@@ -54,11 +53,11 @@ class WSColorServer(WebSocket):
 			print(e)
 
 	def connected(self):
-		print(self.address, "connected")
+		print(self.address + " WS connection opened")
 		clients.append(self)
 		message = get_color_message()
 		self.send_message(message)
 
 	def handle_close(self):
 		clients.remove(self)
-		print(self.address, "closed")
+		print(self.address + " WS connection closed")
