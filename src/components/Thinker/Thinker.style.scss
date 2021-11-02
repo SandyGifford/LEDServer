@@ -1,0 +1,29 @@
+@keyframes Thinker__bounce {
+	0%   { left: 0 }
+	100% { left: 100% }
+}
+
+.Thinker {
+	height: 0.5em;
+	width: 0.5em;
+	margin: 0.25em;
+	position: relative;
+
+	&::after,
+	&::before {
+		content: "";
+		position: absolute;
+		display: block;
+		width: 0.5em;
+		height: 0.5em;
+		background: #445;
+		border-radius: 50%;
+		animation: Thinker__bounce 0.35s ease-in-out infinite alternate;
+		transform: translateX(-50%);
+	}
+
+	&::before {
+		background-color: rgba(#445, 0.5);
+		animation-delay: 0.15s;
+	}
+}

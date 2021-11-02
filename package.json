@@ -1,0 +1,44 @@
+{
+	"name": "led-server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"makePyEnv": "python3 -m venv .venv",
+		"activatePyEnvp--doesntWork": ". ./.venv/bin/activate",
+		"pyInstall": "./.venv/bin/pip3 install -r ./pyReqs.txt",
+		"pyLocalInstall": "./.venv/bin/pip3 install -r ./pyReqs.txt",
+		"updatePyReqs": "npm run updateAllPyReqs && npm run updateLocalPyReqs",
+		"updateAllPyReqs": "./.venv/bin/pip3 freeze > ./pyReqs.txt",
+		"updateLocalPyReqs": "./.venv/bin/pip3 freeze | grep -iv adafruit > ./pyLocalReqs.txt",
+
+		"dev": "webpack --watch --progress",
+		"server": "sudo ./.venv/bin/python3 dist/server/app.py",
+
+		"sync": "rsync -a --exclude .env --exclude dist/server/files/__pycache__ --exclude node_modules --exclude .venv . pi@ledserver:/home/pi/LEDServer"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/react": "^17.0.27",
+		"@types/react-dom": "^17.0.9",
+		"css-loader": "^6.3.0",
+		"hsl-to-rgb": "^1.0.0",
+		"html-webpack-plugin": "^5.3.2",
+		"mini-css-extract-plugin": "^2.4.2",
+		"pug": "^3.0.2",
+		"pug3-loader": "^2.4.3",
+		"react": "^17.0.2",
+		"react-colorful": "^5.5.0",
+		"react-dom": "^17.0.2",
+		"react-error-boundary": "^3.1.3",
+		"reset-css": "^5.0.1",
+		"sass": "^1.42.1",
+		"sass-loader": "^12.1.0",
+		"style-loader": "^3.3.0",
+		"ts-loader": "^9.2.6",
+		"typescript": "^4.4.3",
+		"webpack": "^5.56.1",
+		"webpack-cli": "^4.8.0"
+	}
+}
