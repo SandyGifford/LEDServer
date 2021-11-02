@@ -9,7 +9,12 @@ def resolve_env_key(key, default):
 	): return default
 	return os.environ[key]
 
-DIST_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+def process_path(path):
+	return os.path.abspath(os.path.expanduser(path))
+
+LOG_LEVEL = resolve_env_key("LOG_LEVEL", None)
+LOG_PATH = process_path(resolve_env_key("LOG_PATH", None))
+DIST_PATH = process_path(os.path.join(os.path.dirname(__file__), "../.."))
 BUILD_PATH = os.path.join(DIST_PATH, "build")
 INDEX_PATH = os.path.join(BUILD_PATH, "index.html")
 JS_PATH = os.path.join(BUILD_PATH, "js")

@@ -3,6 +3,7 @@ import neopixel
 import math
 import os
 import time
+import logging
 
 PIXEL_COUNT = 120
 
@@ -12,7 +13,7 @@ def loop_forever(action):
 	try:
 		while (True): action()
 	except KeyboardInterrupt:
-		print("\ngoodbye")
+		logging.info("\ngoodbye")
 
 def make_grad(start_color, end_color, pixel_count, brightness = 1):
 	pixels = []
@@ -92,7 +93,7 @@ def loop_fade(pixel_groups, seconds):
 			multi_fade_pixels(pixel_groups, seconds)
 			fade_pixels(last_group, first_group, seconds_per_leg)
 	except KeyboardInterrupt:
-		print("goodbye")
+		logging.info("\ngoodbye")
 
 def rotate_array(array):
 	el = array[0]
@@ -115,7 +116,7 @@ def loop_rotate_pixels(pixels, seconds, fade = False):
 				time.sleep(seconds_per_leg)
 				pixels = rotate_array(pixels)
 	except KeyboardInterrupt:
-		print("goodbye")
+		logging.info("\ngoodbye")
 
 last_color = (0, 0, 0)
 
@@ -123,7 +124,7 @@ def thread_lights():
 	global last_color
 	while True:
 		try:
-			print("starting lighting thread")
+			logging.info("starting lighting thread")
 			while True:
 				if "LED_COLOR" in os.environ:
 					color_arr = os.environ["LED_COLOR"].split(",")
@@ -140,9 +141,9 @@ def thread_lights():
 				n_pixels.show()
 				time.sleep(1)
 		except BaseException as e:
-			print("{!r}; restarting lighting thread".format(e))
+			logging.error("{!r}; restarting lighting thread".format(e))
 		else:
-			print("exited normally, bad thread; restarting")
+			logging.error("exited normally, bad thread; restarting")
 
 # RAINBOW = make_multi_grad([
 # 	(255, 0, 0),
