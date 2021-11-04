@@ -1,128 +1,18 @@
 import board
-from dist.lighting.consts import COLOR_ENV_KEY
+from lighting.consts import COLOR_ENV_KEY
 import neopixel
 import math
 import os
 import time
 import logging
 
-PIXEL_COUNT = 120
-
-n_pixels = neopixel.NeoPixel(board.D18, PIXEL_COUNT, auto_write = False)
-
-def loop_forever(action):
-	try:
-		while (True): action()
-	except KeyboardInterrupt:
-		logging.info("\ngoodbye")
-
-def make_grad(start_color, end_color, pixel_count, brightness = 1):
-	pixels = []
-	diff_step = ((end_color[0] - start_color[0]) / pixel_count, (end_color[1] - start_color[1]) / pixel_count, (end_color[2] - start_color[2]) / pixel_count)
-
-	for i in range(0, pixel_count):
-		pixels.append(((start_color[0] + i * diff_step[0]) * brightness, (start_color[1] + i * diff_step[1]) * brightness, (start_color[2] + i * diff_step[2]) * brightness))
-
-	return pixels
-
-
-def make_multi_grad(colors, pixel_count, brightness = 1):
-	diff_count = len(colors) - 1
-	if diff_count is 0: return make_fill(colors[0], pixel_count, brightness)
-	per_color = math.floor(pixel_count / diff_count)
-	leftover = pixel_count % diff_count
-	pixels = make_grad(colors[0], colors[1], per_color + leftover, brightness)
-	
-	for i in range(1, diff_count):
-		pixels += make_grad(colors[i], colors[i + 1], per_color, brightness)
-
-	return pixels
-
-def make_fill(color, pixel_count, brightness = 1):
-	pixels = []
-	for i in range(0, pixel_count):
-		pixels.append(color)
-	return pixels
-
-
-def set_pixels(pixels):
-	pixel_count = len(pixels)
-	for i in range(0, pixel_count):
-		n_pixels[i] = pixels[i]
-	n_pixels.show()
-
-def get_faded_comp(from_comp, to_comp, fraction):
-	return (to_comp - from_comp) * fraction + from_comp
-
-def get_faded_pixel(from_pixel, to_pixel, fraction):
-	return [
-		get_faded_comp(from_pixel[0], to_pixel[0], fraction),
-		get_faded_comp(from_pixel[1], to_pixel[1], fraction),
-		get_faded_comp(from_pixel[2], to_pixel[2], fraction)
-	]
-
-STEPS_PER_SECOND = 50
-
-def fade_pixels(from_pixels, to_pixels, seconds):
-	steps = math.floor(STEPS_PER_SECOND * seconds)
-	wait_time = seconds / steps
-	for i in range(0, steps):
-		set_pixels(list(map(
-			(lambda p: get_faded_pixel(from_pixels[p], to_pixels[p], i / steps)),
-			range(0, len(from_pixels))
-		)))
-		time.sleep(wait_time)
-
-	# clear up any rounding errors
-	set_pixels(to_pixels)
-
-def multi_fade_pixels(pixel_groups, seconds):
-	leg_count = len(pixel_groups)
-	seconds_per_leg = seconds / leg_count
-	diff_count = leg_count - 1
-	for i in range(0, diff_count):
-		fade_pixels(pixel_groups[i], pixel_groups[i + 1], seconds_per_leg)
-
-def loop_fade(pixel_groups, seconds):
-	leg_count = len(pixel_groups)
-	seconds_per_leg = seconds / leg_count
-	first_group = pixel_groups[0]
-	last_group = pixel_groups[leg_count - 1]
-
-	try:
-		while (True):
-			multi_fade_pixels(pixel_groups, seconds)
-			fade_pixels(last_group, first_group, seconds_per_leg)
-	except KeyboardInterrupt:
-		logging.info("\ngoodbye")
-
-def rotate_array(array):
-	el = array[0]
-	array = array[1:]
-	array.append(el)
-	return array
-
-def loop_rotate_pixels(pixels, seconds, fade = False):
-	pixel_count = len(pixels)
-	seconds_per_leg = seconds / pixel_count
-	
-	try:
-		while (True):
-			if fade:
-				to_pixels = rotate_array(pixels)
-				fade_pixels(pixels, to_pixels, seconds_per_leg)
-				pixels = to_pixels
-			else:
-				set_pixels(pixels)
-				time.sleep(seconds_per_leg)
-				pixels = rotate_array(pixels)
-	except KeyboardInterrupt:
-		logging.info("\ngoodbye")
-
-last_color = (0, 0, 0)
 
 def start_lights():
-	global last_color
+	PIXEL_COUNT = 120
+	STEPS_PER_SECOND = 50
+	n_pixels = neopixel.NeoPixel(board.D18, PIXEL_COUNT, auto_write = False)
+	last_color = (0, 0, 0)
+
 	while True:
 		try:
 			logging.info("starting lighting thread")
@@ -145,6 +35,110 @@ def start_lights():
 			logging.error("{!r}; restarting lighting thread".format(e))
 		else:
 			logging.error("exited normally, bad thread; restarting")
+
+	def make_fill(color, pixel_count, brightness = 1):
+		pixels = []
+		for i in range(0, pixel_count):
+			pixels.append(color)
+		return pixels
+
+	def get_faded_comp(from_comp, to_comp, fraction):
+		return (to_comp - from_comp) * fraction + from_comp
+
+	def fade_pixels(from_pixels, to_pixels, seconds):
+		steps = math.floor(STEPS_PER_SECOND * seconds)
+		wait_time = seconds / steps
+		for i in range(0, steps):
+			set_pixels(list(map(
+				(lambda p: get_faded_pixel(from_pixels[p], to_pixels[p], i / steps)),
+				range(0, len(from_pixels))
+			)))
+			time.sleep(wait_time)
+
+		# clear up any rounding errors
+		set_pixels(to_pixels)
+
+	def get_faded_pixel(from_pixel, to_pixel, fraction):
+		return [
+			get_faded_comp(from_pixel[0], to_pixel[0], fraction),
+			get_faded_comp(from_pixel[1], to_pixel[1], fraction),
+			get_faded_comp(from_pixel[2], to_pixel[2], fraction)
+		]
+
+	def set_pixels(pixels):
+		pixel_count = len(pixels)
+		for i in range(0, pixel_count):
+			n_pixels[i] = pixels[i]
+		n_pixels.show()
+
+
+
+
+	# def make_grad(start_color, end_color, pixel_count, brightness = 1):
+	# 	pixels = []
+	# 	diff_step = ((end_color[0] - start_color[0]) / pixel_count, (end_color[1] - start_color[1]) / pixel_count, (end_color[2] - start_color[2]) / pixel_count)
+
+	# 	for i in range(0, pixel_count):
+	# 		pixels.append(((start_color[0] + i * diff_step[0]) * brightness, (start_color[1] + i * diff_step[1]) * brightness, (start_color[2] + i * diff_step[2]) * brightness))
+
+	# 	return pixels
+
+
+	# def make_multi_grad(colors, pixel_count, brightness = 1):
+	# 	diff_count = len(colors) - 1
+	# 	if diff_count is 0: return make_fill(colors[0], pixel_count, brightness)
+	# 	per_color = math.floor(pixel_count / diff_count)
+	# 	leftover = pixel_count % diff_count
+	# 	pixels = make_grad(colors[0], colors[1], per_color + leftover, brightness)
+		
+	# 	for i in range(1, diff_count):
+	# 		pixels += make_grad(colors[i], colors[i + 1], per_color, brightness)
+
+	# 	return pixels
+
+	# def multi_fade_pixels(pixel_groups, seconds):
+	# 	leg_count = len(pixel_groups)
+	# 	seconds_per_leg = seconds / leg_count
+	# 	diff_count = leg_count - 1
+	# 	for i in range(0, diff_count):
+	# 		fade_pixels(pixel_groups[i], pixel_groups[i + 1], seconds_per_leg)
+
+	# def loop_fade(pixel_groups, seconds):
+	# 	leg_count = len(pixel_groups)
+	# 	seconds_per_leg = seconds / leg_count
+	# 	first_group = pixel_groups[0]
+	# 	last_group = pixel_groups[leg_count - 1]
+
+	# 	try:
+	# 		while (True):
+	# 			multi_fade_pixels(pixel_groups, seconds)
+	# 			fade_pixels(last_group, first_group, seconds_per_leg)
+	# 	except KeyboardInterrupt:
+	# 		logging.info("\ngoodbye")
+
+	# def rotate_array(array):
+	# 	el = array[0]
+	# 	array = array[1:]
+	# 	array.append(el)
+	# 	return array
+
+	# def loop_rotate_pixels(pixels, seconds, fade = False):
+		pixel_count = len(pixels)
+		seconds_per_leg = seconds / pixel_count
+		
+		try:
+			while (True):
+				if fade:
+					to_pixels = rotate_array(pixels)
+					fade_pixels(pixels, to_pixels, seconds_per_leg)
+					pixels = to_pixels
+				else:
+					set_pixels(pixels)
+					time.sleep(seconds_per_leg)
+					pixels = rotate_array(pixels)
+		except KeyboardInterrupt:
+			logging.info("\ngoodbye")
+
 
 # RAINBOW = make_multi_grad([
 # 	(255, 0, 0),
