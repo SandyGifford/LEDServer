@@ -15,3 +15,4 @@ def process_path(path):
 
 PYTHON_LOG_LEVEL = resolve_env_key("PYTHON_LOG_LEVEL", None)
 PYTHON_LOG_PATH = process_path(resolve_env_key("PYTHON_LOG_PATH", None))
+COLOR_ENV_KEY = resolve_env_key("COLOR_ENV_KEY", "LED_COLOR")

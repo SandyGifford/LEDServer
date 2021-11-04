@@ -1,4 +1,5 @@
 import board
+from dist.lighting.consts import COLOR_ENV_KEY
 import neopixel
 import math
 import os
@@ -126,8 +127,8 @@ def start_lights():
 		try:
 			logging.info("starting lighting thread")
 			while True:
-				if "LED_COLOR" in os.environ:
-					color_arr = os.environ["LED_COLOR"].split(",")
+				if COLOR_ENV_KEY in os.environ:
+					color_arr = os.environ[COLOR_ENV_KEY].split(",")
 					color = (int(color_arr[0]), int(color_arr[1]), int(color_arr[2]))
 
 					if (
