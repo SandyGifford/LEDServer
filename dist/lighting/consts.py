@@ -10,6 +10,7 @@ def resolve_env_key(key, default):
 	return os.environ[key]
 
 def process_path(path):
+	if not path: return None
 	return os.path.abspath(os.path.expanduser(path))
 
 PYTHON_LOG_LEVEL = resolve_env_key("PYTHON_LOG_LEVEL", None)
