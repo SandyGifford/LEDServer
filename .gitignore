@@ -1,5 +1,4 @@
 dist/build
 node_modules
 .env
-dist/server/files/__pycache__
 .venv

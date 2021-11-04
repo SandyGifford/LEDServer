@@ -1,4 +1,4 @@
-from files.consts import SERVER_ENV, LOG_PATH, LOG_LEVEL
+from .consts import LOG_PATH, LOG_LEVEL
 import os
 import logging
 

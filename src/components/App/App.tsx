@@ -3,6 +3,7 @@ import { RgbColor, RgbColorPicker } from "react-colorful";
 import { Color } from "../../typings/color";
 import { WSHelperClient } from "../../WSHelper";
 import { ErrorBoundary } from "react-error-boundary";
+import DOMUtils from "../../utils/DOMUtils";
 
 interface AppProps {}
 
@@ -57,5 +58,4 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 export default App;
 
 import "./App.style";import Thinker from "../Thinker/Thinker";
-import DOMUtils from "../../utils/DOMUtils";
 

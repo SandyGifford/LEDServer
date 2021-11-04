@@ -5,16 +5,12 @@
 	"main": "index.js",
 	"scripts": {
 		"makePyEnv": "python3 -m venv .venv",
-		"activatePyEnvp--doesntWork": ". ./.venv/bin/activate",
 		"pyInstall": "./.venv/bin/pip3 install -r ./pyReqs.txt",
-		"pyLocalInstall": "./.venv/bin/pip3 install -r ./pyReqs.txt",
-		"updatePyReqs": "npm run updateAllPyReqs && npm run updateLocalPyReqs",
-		"updateAllPyReqs": "./.venv/bin/pip3 freeze > ./pyReqs.txt",
-		"updateLocalPyReqs": "./.venv/bin/pip3 freeze | grep -iv adafruit > ./pyLocalReqs.txt",
-
-		"dev": "webpack --watch --progress",
-		"server": "sudo ./.venv/bin/python3 dist/server/app.py",
-
+		"updatePyReqs": "./.venv/bin/pip3 freeze > ./pyReqs.txt",
+		"frontDev": "webpack --watch --progress",
+		"backDev": "ts-node-dev dist/server/server.ts",
+		"runLights": "sudo ./.venv/bin/python3 dist/server/app.py",
+		"runServer": "ts-node dist/server/server.ts",
 		"sync": "rsync -a --exclude .env --exclude dist/server/files/__pycache__ --exclude node_modules --exclude .venv . pi@ledserver:/home/pi/LEDServer"
 	},
 	"author": "",
@@ -40,5 +36,15 @@
 		"typescript": "^4.4.3",
 		"webpack": "^5.56.1",
 		"webpack-cli": "^4.8.0"
+	},
+	"dependencies": {
+		"@types/express": "^4.17.13",
+		"@types/ws": "^8.2.0",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"ts-node": "^10.4.0",
+		"ts-node-dev": "^1.1.8",
+		"ws": "^8.2.3",
+		"wshelper": "git+https://github.com/SandyGifford/WSHelper.git"
 	}
 }
