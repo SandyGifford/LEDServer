@@ -9,7 +9,7 @@
 		"updatePyReqs": "./.venv/bin/pip3 freeze > ./pyReqs.txt",
 		"frontDev": "webpack --watch --progress",
 		"backDev": "ts-node-dev dist/server/server.ts",
-		"lights": "sudo ./.venv/bin/python3 dist/server/app.py",
+		"lights": "sudo ./.venv/bin/python3 dist/lighting/lighting.py",
 		"server": "ts-node dist/server/server.ts",
 		"sync": "rsync -a --exclude .env --exclude dist/server/files/__pycache__ --exclude node_modules --exclude .venv . pi@ledserver:/home/pi/LEDServer"
 	},

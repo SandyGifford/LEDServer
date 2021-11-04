@@ -120,7 +120,7 @@ def loop_rotate_pixels(pixels, seconds, fade = False):
 
 last_color = (0, 0, 0)
 
-def thread_lights():
+def start_lights():
 	global last_color
 	while True:
 		try:
