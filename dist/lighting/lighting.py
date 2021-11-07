@@ -2,10 +2,11 @@ from logging_utils import init_logging
 init_logging()
 
 from routines.watch_file import watch_file
+from routines.pulse import pulse
 from routines.static_rainbow import static_rainbow
 from routines.noise import noise
 
-noise(size=10)
+pulse()
 
 
 
