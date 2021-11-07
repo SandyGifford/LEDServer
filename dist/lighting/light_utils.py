@@ -1,5 +1,4 @@
 import board
-from consts import COLOR_ENV_KEY
 import neopixel
 import math
 import os

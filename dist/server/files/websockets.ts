@@ -1,7 +1,10 @@
 import { WSHelperServer, WSSHelperServer } from "wshelper";
 import { Color } from "../../../src/typings/color";
 import { ServerWebsocketDataMap } from "../typings";
-import { COLOR_ENV_KEY, WS_PORT } from "./consts";
+import { COLOR_FILE_PATH, WS_PORT } from "./consts";
+import fs from "fs-extra";
+
+fs.ensureFileSync(COLOR_FILE_PATH);
 
 let _color: Color = [255, 0, 255];
 
@@ -35,6 +38,6 @@ function sendColor(color: Color, fromClient: WSHelperServer<ServerWebsocketDataM
 	));
 
 	_color = color;
-	process.env[COLOR_ENV_KEY] = color.join(",");
+	fs.writeFile(COLOR_FILE_PATH, color.join(","));
 	server.sendToAllExcept("color", [fromClient], color);
 }

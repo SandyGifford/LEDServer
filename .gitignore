@@ -1,6 +1,7 @@
 dist/build
+dist/tmp
 node_modules
 .env
 .venv
 .DS_store
-dist/lighting/__pycache__
+__pycache__/
