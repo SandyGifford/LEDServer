@@ -9,6 +9,7 @@ class PixelGroupChain:
 	def __init__(self, groups, GPIO=board.D18, pixels=None, steps_per_second=50):
 		size = 0
 		for g in groups: size += g
+		self._size = size
 		self._pixels = pixels if pixels else neopixel.NeoPixel(GPIO, size, auto_write=False)
 		self._steps_per_second = steps_per_second
 		
@@ -26,10 +27,9 @@ class PixelGroupChain:
 		self._groups[index].set_pixels(pixels, render)
 
 	def set_pixels_all(self, pixels, render=True):
-		pixel_count = len(pixels)
-		for i in range(0, pixel_count):
-			if i >= self._length: break
-			self._pixels[i + self._offset] = pixels[i]
+		for i in range(0, self._size):
+			if i >= self._size: break
+			self._pixels[i] = pixels[i]
 		if render: self._pixels.show()
 
 	def fill(self, index, color, render=True):

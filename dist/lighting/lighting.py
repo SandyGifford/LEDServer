@@ -1,14 +1,71 @@
 from logging_utils import init_logging
 init_logging()
 
+import math
+from random import randint
+import time
+from light_utils import make_multi_grad
 from PixelGroupChain import PixelGroupChain
 
-chain = PixelGroupChain([60, 60])
-chain.fill(0, (100, 0, 100), False)
-chain.fill(1, (0, 100, 0), False)
-chain.render()
+PIXEL_COUNT = 60
 
-chain.fade_to_all((100, 100, 0), 1)
+chain = PixelGroupChain([60, 60])
+
+# chain.fill_all((0, 0, 0))
+
+chain.set_pixels_all(make_multi_grad([
+	(255, 0, 0),
+	(255, 127, 0),
+	(255, 255, 0),
+	(0, 255, 0),
+	(0, 0, 255),
+	(75, 0, 130),
+	(148, 0, 211),
+	(255, 0, 0),
+	(255, 0, 0),
+	(148, 0, 211),
+	(75, 0, 130),
+	(0, 0, 255),
+	(0, 255, 0),
+	(255, 255, 0),
+	(255, 127, 0),
+	(255, 0, 0),
+], 120, 0.25))
+
+
+# chain.fill_all((255, 128, 0))
+
+# def randomPixels(comp_range=(0, 255), all_range=None):
+# 	pixels = []
+# 	all_range = all_range or (comp_range, comp_range, comp_range)
+
+# 	for i in range(0, PIXEL_COUNT):
+# 		pixels.append((randint(all_range[0][0], all_range[0][1]), randint(all_range[1][0], all_range[1][1]), randint(all_range[2][0], all_range[2][1])))
+# 	return pixels
+
+# while True:
+# 	chain.fade_to_all(randomPixels(all_range=((100, 255), (0, 50), (100, 255))), 0.25)
+
+
+
+
+
+
+# def rotate_array(array):
+# 	return array[1:] + [array[0]]
+# chain.fill_all((0, 0, 0))
+
+# pixels = []
+
+# for i in range(0, PIXEL_COUNT):
+# 	if math.floor(i / 10) % 2 == 0: pixels.append((255, 0, 255))
+# 	else: pixels.append((0, 255, 0))
+
+# while True:
+# 	pixels = rotate_array(pixels)
+# 	chain.set_pixels_all(pixels)
+# 	time.sleep(0.02)
+
 
 
 # def get_color_from_env():
