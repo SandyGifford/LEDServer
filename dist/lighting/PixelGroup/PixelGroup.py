@@ -6,11 +6,11 @@ import asyncio
 from utils.light_utils import make_fill, to_pixels, get_faded_pixel
 
 class PixelGroup:
-	def __init__(self, size, GPIO=board.D18, offset=0, pixels=None, steps_per_second=50):
+	def __init__(self, size, GPIO=board.D18, offset=0, pixels=None, frames_per_second=30):
 		self._size = size
 		self._offset = offset
 		self._pixels = pixels if pixels else neopixel.NeoPixel(GPIO, size + offset, auto_write=False)
-		self._steps_per_second = steps_per_second
+		self._frames_per_second = frames_per_second
 
 	def fill(self, color, render=True):
 		self.set_pixels(make_fill(color, self._size), render)
@@ -26,7 +26,7 @@ class PixelGroup:
 		asyncio.get_event_loop().run_until_complete(self.fade_to_async(color_or_pixels, seconds, render))
 
 	async def fade_to_async(self, color_or_pixels, seconds, render=True):
-		step_count = math.floor(self._steps_per_second * seconds)
+		step_count = math.floor(self._frames_per_second * seconds)
 		wait_time = seconds / step_count
 
 		from_pixels = []

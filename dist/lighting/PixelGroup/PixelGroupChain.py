@@ -7,19 +7,18 @@ from utils.light_utils import make_fill, to_pixels, get_faded_pixel
 from PixelGroup.PixelGroup import PixelGroup
 
 class PixelGroupChain:
-	def __init__(self, groups, GPIO=board.D18, pixels=None, steps_per_second=50):
+	def __init__(self, groups, GPIO=board.D18, pixels=None, frames_per_second=50):
 		size = 0
 		for g in groups: size += g
 		self._size = size
 		self._pixels = pixels if pixels else neopixel.NeoPixel(GPIO, size, auto_write=False)
-		self._steps_per_second = steps_per_second
 		self._queue = []
 		
 		self._groups = []
 		offset = 0
 		
 		for size in groups:
-			self._groups.append(PixelGroup(size, GPIO=GPIO, offset=offset, pixels=self._pixels, steps_per_second=steps_per_second))
+			self._groups.append(PixelGroup(size, GPIO=GPIO, offset=offset, pixels=self._pixels, frames_per_second=frames_per_second))
 			offset += size
 
 	def render(self):
