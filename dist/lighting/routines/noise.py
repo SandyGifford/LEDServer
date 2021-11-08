@@ -1,8 +1,9 @@
 import math
 from random import randint
+from utils.py_utils import run_loop
 from PixelGroup.PixelGroupChain import PixelGroupChain
 
-def noise(comp_range=(0, 255), all_range=None, delay=0.25, size=1):
+def noise(comp_range=(0, 255), all_range=None, delay=0.25, size=10):
 	PIXEL_COUNT = 120
 	group_count = math.floor(PIXEL_COUNT / size)
 	leftover_count = PIXEL_COUNT % size
@@ -26,5 +27,7 @@ def noise(comp_range=(0, 255), all_range=None, delay=0.25, size=1):
 				pixels.append(color)
 		return pixels
 
-	while True:
+	def loop():
 		chain.fade_to_all(randomPixels(comp_range=comp_range, all_range=all_range), delay)
+
+	run_loop(loop)

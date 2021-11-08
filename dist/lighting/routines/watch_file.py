@@ -1,4 +1,5 @@
 import time
+from utils.py_utils import run_loop
 from PixelGroup.PixelGroupChain import PixelGroupChain
 from consts import COLOR_FILE_PATH
 
@@ -16,7 +17,7 @@ def watch_file():
 
 	last_color = read_color()
 
-	while True:
+	def loop():
 		color = read_color()
 		if (
 			color[0] != last_color[0] or
@@ -27,3 +28,5 @@ def watch_file():
 			last_color = color
 
 		time.sleep(1)
+
+	run_loop(loop)
