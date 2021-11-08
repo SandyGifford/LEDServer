@@ -2,6 +2,7 @@ import board
 import neopixel
 import math
 import time
+import asyncio
 from light_utils import make_fill, to_pixels, get_faded_pixel
 
 class PixelGroup:
@@ -21,7 +22,13 @@ class PixelGroup:
 			self._pixels[i + self._offset] = pixels[i]
 		if render: self._pixels.show()
 
-	def fade_to_generator(self, color_or_pixels, step_count, render=True):
+	def fade_to(self, color_or_pixels, seconds, render=True):
+		asyncio.get_event_loop().run_until_complete(self.fade_to_async(color_or_pixels, seconds, render))
+
+	async def fade_to_async(self, color_or_pixels, seconds, render=True):
+		step_count = math.floor(self._steps_per_second * seconds)
+		wait_time = seconds / step_count
+
 		from_pixels = []
 		pixels = to_pixels(color_or_pixels, self._size)
 
@@ -33,19 +40,8 @@ class PixelGroup:
 				(lambda p: get_faded_pixel(from_pixels[p], pixels[p], i / step_count)),
 				range(0, len(from_pixels))
 			)), render)
-			yield
 
-	def fade_to(self, color_or_pixels, seconds, render=True):
-		step_count = math.floor(self._steps_per_second * seconds)
-		wait_time = seconds / step_count
-		gen = self.fade_to_generator(color_or_pixels, step_count, render)
-
-		while(True):
-			try:
-				next(gen)
-				time.sleep(wait_time)
-			except StopIteration as e:
-				break
+			await asyncio.sleep(wait_time)
 
 		# clear up any rounding errors
 		self.set_pixels(pixels, render)

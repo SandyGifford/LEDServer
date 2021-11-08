@@ -2,6 +2,7 @@ import board
 import neopixel
 import time
 import math
+import asyncio
 from light_utils import make_fill, to_pixels, get_faded_pixel
 from PixelGroup import PixelGroup
 
@@ -12,6 +13,7 @@ class PixelGroupChain:
 		self._size = size
 		self._pixels = pixels if pixels else neopixel.NeoPixel(GPIO, size, auto_write=False)
 		self._steps_per_second = steps_per_second
+		self._queue = []
 		
 		self._groups = []
 		offset = 0
@@ -40,19 +42,19 @@ class PixelGroupChain:
 			group.fill(color, False)
 		if render: self.render()
 
+	def fade_to(self, index, color_or_pixels, seconds):
+		asyncio.get_event_loop().run_until_complete(self.fade_to_async(index, color_or_pixels, seconds))		
+
 	def fade_to_all(self, color_or_pixels, seconds):
-		gens = []
+		asyncio.get_event_loop().run_until_complete(self.fade_to_all_async(color_or_pixels, seconds))
 
-		step_count = math.floor(self._steps_per_second * seconds)
-		wait_time = seconds / step_count
-		
-		for group in self._groups:
-			gens.append(group.fade_to_generator(color_or_pixels, step_count, False))
+	async def fade_to_async(self, index, color_or_pixels, seconds):
+		await self._groups[index].fade_to_async(color_or_pixels, seconds)
 
-		while(True):
-			try:
-				for g in gens: next(g)
-				self.render()
-				time.sleep(wait_time)
-			except StopIteration as e:
-				break
+	async def fade_to_all_async(self, color_or_pixels, seconds):
+		coroutines = map(
+			(lambda group: group.fade_to_async(color_or_pixels, seconds)),
+			self._groups
+		)
+
+		await asyncio.gather(*coroutines)
