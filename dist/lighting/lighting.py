@@ -6,8 +6,9 @@ from routines.pulse import pulse
 from routines.swap import swap
 from routines.static_rainbow import static_rainbow
 from routines.noise import noise
+from routines.rotate import rotate
 
-noise()
+rotate()
 
 
 

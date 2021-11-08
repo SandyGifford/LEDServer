@@ -1,6 +1,5 @@
 import math
 import asyncio
-from random import randint
 from utils.py_utils import run_loop
 from PixelGroup.PixelGroupChain import PixelGroupChain
 
