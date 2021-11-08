@@ -1,5 +1,5 @@
 import time
-from PixelGroupChain import PixelGroupChain
+from PixelGroup.PixelGroupChain import PixelGroupChain
 from consts import COLOR_FILE_PATH
 
 def watch_file():

@@ -1,5 +1,5 @@
-from PixelGroupChain import PixelGroupChain
-from light_utils import make_multi_grad
+from PixelGroup.PixelGroupChain import PixelGroupChain
+from utils.light_utils import make_multi_grad
 
 def static_rainbow():
 	chain = PixelGroupChain([120])

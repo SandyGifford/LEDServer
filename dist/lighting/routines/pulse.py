@@ -1,7 +1,6 @@
 import math
-import asyncio
 from random import randint
-from PixelGroupChain import PixelGroupChain
+from PixelGroup.PixelGroupChain import PixelGroupChain
 
 def pulse(color=(255, 0, 0), low_color=None, duration=1):
 	PIXEL_COUNT = 120

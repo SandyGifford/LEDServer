@@ -1,6 +1,6 @@
 import math
 from random import randint
-from PixelGroupChain import PixelGroupChain
+from PixelGroup.PixelGroupChain import PixelGroupChain
 
 def noise(comp_range=(0, 255), all_range=None, delay=0.25, size=1):
 	PIXEL_COUNT = 120

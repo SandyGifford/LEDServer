@@ -3,8 +3,8 @@ import neopixel
 import time
 import math
 import asyncio
-from light_utils import make_fill, to_pixels, get_faded_pixel
-from PixelGroup import PixelGroup
+from utils.light_utils import make_fill, to_pixels, get_faded_pixel
+from PixelGroup.PixelGroup import PixelGroup
 
 class PixelGroupChain:
 	def __init__(self, groups, GPIO=board.D18, pixels=None, steps_per_second=50):

@@ -3,7 +3,7 @@ import neopixel
 import math
 import time
 import asyncio
-from light_utils import make_fill, to_pixels, get_faded_pixel
+from utils.light_utils import make_fill, to_pixels, get_faded_pixel
 
 class PixelGroup:
 	def __init__(self, size, GPIO=board.D18, offset=0, pixels=None, steps_per_second=50):

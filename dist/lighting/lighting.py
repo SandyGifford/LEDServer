@@ -1,4 +1,4 @@
-from logging_utils import init_logging
+from utils.logging_utils import init_logging
 init_logging()
 
 from routines.watch_file import watch_file
