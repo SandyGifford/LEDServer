@@ -7,5 +7,6 @@ from routines.swap import swap
 from routines.static_rainbow import static_rainbow
 from routines.noise import noise
 from routines.rotate import rotate
+from routines.off import off
 
-rotate()
+off()

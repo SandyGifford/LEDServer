@@ -21,6 +21,9 @@ class PixelGroupChain:
 			self._groups.append(PixelGroup(size, GPIO=GPIO, offset=offset, pixels=self._pixels, frames_per_second=frames_per_second))
 			offset += size
 
+	def off_all(self):
+		self.fill_all((0, 0, 0))
+
 	def render(self):
 		self._pixels.show()
 

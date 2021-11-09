@@ -15,6 +15,9 @@ class PixelGroup:
 	def fill(self, color, render=True):
 		self.set_pixels(make_fill(color, self._size), render)
 
+	def off():
+		self.fill((0, 0, 0))
+
 	def set_pixels(self, pixels, render=True):
 		pixel_count = len(pixels)
 		for i in range(0, pixel_count):
