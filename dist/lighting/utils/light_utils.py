@@ -26,25 +26,25 @@ def get_faded_pixel(from_pixel, to_pixel, fraction):
 	]
 
 
-def make_grad(start_color, end_color, pixel_count, brightness = 1):
+def make_grad(start_color, end_color, pixel_count):
 	pixels = []
 	diff_step = ((end_color[0] - start_color[0]) / pixel_count, (end_color[1] - start_color[1]) / pixel_count, (end_color[2] - start_color[2]) / pixel_count)
 
 	for i in range(0, pixel_count):
-		pixels.append(((start_color[0] + i * diff_step[0]) * brightness, (start_color[1] + i * diff_step[1]) * brightness, (start_color[2] + i * diff_step[2]) * brightness))
+		pixels.append((start_color[0] + i * diff_step[0], start_color[1] + i * diff_step[1], start_color[2] + i * diff_step[2]))
 
 	return pixels
 
 
-def make_multi_grad(colors, pixel_count, brightness = 1):
+def make_multi_grad(colors, pixel_count):
 	diff_count = len(colors) - 1
-	if diff_count is 0: return make_fill(colors[0], pixel_count, brightness)
+	if diff_count is 0: return make_fill(colors[0], pixel_count)
 	per_color = math.floor(pixel_count / diff_count)
 	leftover = pixel_count % diff_count
-	pixels = make_grad(colors[0], colors[1], per_color + leftover, brightness)
+	pixels = make_grad(colors[0], colors[1], per_color + leftover)
 	
 	for i in range(1, diff_count):
-		pixels += make_grad(colors[i], colors[i + 1], per_color, brightness)
+		pixels += make_grad(colors[i], colors[i + 1], per_color)
 
 	return pixels
 

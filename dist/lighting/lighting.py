@@ -9,4 +9,4 @@ from routines.noise import noise
 from routines.rotate import rotate
 from routines.off import off
 
-off()
+watch_file()
