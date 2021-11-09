@@ -16,5 +16,6 @@ def process_path(path):
 
 PYTHON_LOG_LEVEL = resolve_env_key("PYTHON_LOG_LEVEL", None)
 PYTHON_LOG_PATH = process_path(resolve_env_key("PYTHON_LOG_PATH", None))
-DIST_PATH = process_path(os.path.join(os.path.dirname(__file__), "../"))
+BASE_PATH = process_path(os.path.join(os.path.dirname(__file__), "../../"))
+DIST_PATH = process_path(os.path.join(BASE_PATH, "dist"))
 COLOR_FILE_PATH = process_path(resolve_env_key("COLOR_FILE_PATH", os.path.join(DIST_PATH, "tmp/color.csv")))

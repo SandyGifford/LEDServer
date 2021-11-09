@@ -13,7 +13,8 @@ export type LogLevel = "NONE" | "ERROR" | "WARN" | "INFO" | "DEBUG";
 export const NODE_LOG_LEVEL = resolveEnvKey("NODE_LOG_LEVEL", "INFO") as LogLevel;
 export const NODE_LOG_PATH = process.env["NODE_LOG_PATH"];
 
-export const DIST_PATH = path.join(__dirname, "../..");
+export const BASE_PATH = path.join(__dirname, "../../../");
+export const DIST_PATH = path.join(BASE_PATH, "dist");
 export const BUILD_PATH = path.join(DIST_PATH, "build");
 export const COLOR_FILE_PATH = path.join(DIST_PATH, "tmp/color.csv");
 export const INDEX_PATH = path.join(BUILD_PATH, "index.html");
