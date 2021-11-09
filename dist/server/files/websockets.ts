@@ -38,6 +38,6 @@ function sendColor(color: Color, fromClient: WSHelperServer<ServerWebsocketDataM
 	));
 
 	_color = color;
-	fs.writeFile(COLOR_FILE_PATH, color.join(","));
+	fs.writeFile(COLOR_FILE_PATH, Math.floor(new Date().getTime() / 1000) + "\n" + color.join(","));
 	server.sendToAllExcept("color", [fromClient], color);
 }
