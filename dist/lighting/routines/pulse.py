@@ -1,7 +1,7 @@
 import math
 from random import randint
 from PixelGroup.PixelGroupChain import PixelGroupChain
-from dist.lighting.consts import LED_COUNT
+from consts import LED_COUNT
 from utils.py_utils import run_loop
 
 def pulse(color=(255, 0, 0), low_color=None, duration=1):

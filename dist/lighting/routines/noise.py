@@ -1,6 +1,6 @@
 import math
 from random import randint
-from dist.lighting.consts import LED_COUNT
+from consts import LED_COUNT
 from utils.py_utils import run_loop
 from PixelGroup.PixelGroupChain import PixelGroupChain
 

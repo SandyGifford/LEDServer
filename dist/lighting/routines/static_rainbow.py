@@ -1,5 +1,5 @@
 from PixelGroup.PixelGroupChain import PixelGroupChain
-from dist.lighting.consts import LED_COUNT
+from consts import LED_COUNT
 from utils.light_utils import make_multi_grad
 
 def static_rainbow():
