@@ -1,6 +1,5 @@
 import { WSHelperServer, WSSHelperServer } from "wshelper";
-import { Color } from "../../../src/typings/color";
-import { ServerWebsocketDataMap } from "../typings";
+import { Color, ServerWebsocketDataMap } from "../../typings";
 import { REDIS_PORT, WS_PORT } from "./consts";
 import redis from "redis";
 
