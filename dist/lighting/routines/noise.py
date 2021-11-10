@@ -1,14 +1,14 @@
 import math
 from random import randint
+from dist.lighting.consts import LED_COUNT
 from utils.py_utils import run_loop
 from PixelGroup.PixelGroupChain import PixelGroupChain
 
 def noise(comp_range=(0, 255), all_range=None, delay=0.25, size=10):
-	PIXEL_COUNT = 120
-	group_count = math.floor(PIXEL_COUNT / size)
-	leftover_count = PIXEL_COUNT % size
+	group_count = math.floor(LED_COUNT / size)
+	leftover_count = LED_COUNT % size
 
-	chain = PixelGroupChain([PIXEL_COUNT])
+	chain = PixelGroupChain([LED_COUNT])
 
 	def randomPixels(comp_range=(0, 255), all_range=None):
 		pixels = []

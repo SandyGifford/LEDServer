@@ -23,3 +23,5 @@ export const CSS_PATH = path.join(BUILD_PATH, "css");
 export const WEB_PORT = parseInt(resolveEnvKey("WEB_PORT", "3000"));
 export const WS_PORT = parseInt(resolveEnvKey("WS_PORT", "3001"));
 export const SERVER_ENV = resolveEnvKey("SERVER_ENV", "DEV") as ServerEnv;
+export const LED_CONFIG = resolveEnvKey("LED_CONFIG", "60,60").split(",").map(i => parseInt(i));
+export const LED_COUNT = LED_CONFIG.reduce((count, i) => count + i, 0);

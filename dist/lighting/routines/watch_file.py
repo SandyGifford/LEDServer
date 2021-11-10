@@ -1,4 +1,5 @@
 import time
+from dist.lighting.consts import LED_CONFIG
 from utils.py_utils import run_loop
 from utils.light_utils import make_multi_grad
 from PixelGroup.PixelGroupChain import PixelGroupChain
@@ -10,8 +11,7 @@ import os
 ColorFileData = namedtuple("ColorFileData", ["write_time", "colors"])
 
 def watch_file():
-	PIXEL_COUNT = 120
-	chain = PixelGroupChain([PIXEL_COUNT])
+	chain = PixelGroupChain([LED_CONFIG])
 
 	if (not os.path.exists(COLOR_FILE_PATH)): open(COLOR_FILE_PATH, "x").close()
 
@@ -27,7 +27,7 @@ def watch_file():
 
 		try:
 			write_time = int(lines[0])
-		except e:
+		except BaseException as e:
 			logging.warn("Could not read write_time, using default 0")
 			logging.error(e)
 
@@ -47,7 +47,7 @@ def watch_file():
 		return ColorFileData(write_time, colors)
 
 	def render_pixels(colors):
-		chain.fade_to_all(make_multi_grad(colors, PIXEL_COUNT), 0.5)
+		chain.fade_to_all(make_multi_grad(colors, LED_CONFIG), 0.5)
 
 	initial_file_data = read_colors()
 	render_pixels(initial_file_data.colors)

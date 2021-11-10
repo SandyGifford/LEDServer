@@ -1,8 +1,9 @@
 from PixelGroup.PixelGroupChain import PixelGroupChain
+from dist.lighting.consts import LED_COUNT
 from utils.light_utils import make_multi_grad
 
 def static_rainbow():
-	chain = PixelGroupChain([120])
+	chain = PixelGroupChain([LED_COUNT])
 
 	chain.set_pixels_all(make_multi_grad([
 		(255, 0, 0),
@@ -21,4 +22,4 @@ def static_rainbow():
 		(255, 255, 0),
 		(255, 127, 0),
 		(255, 0, 0),
-	], 120, 0.25))
+	], LED_COUNT, 0.25))

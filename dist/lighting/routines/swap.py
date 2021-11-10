@@ -1,10 +1,11 @@
 import math
 import asyncio
+from dist.lighting.consts import LED_CONFIG
 from utils.py_utils import run_loop
 from PixelGroup.PixelGroupChain import PixelGroupChain
 
 def swap(color1=(255, 0, 255), color2=(0, 255, 0), seconds=5):
-	chain = PixelGroupChain([60, 60])
+	chain = PixelGroupChain(LED_CONFIG)
 
 	def loop():
 		asyncio.get_event_loop().run_until_complete(asyncio.gather(
