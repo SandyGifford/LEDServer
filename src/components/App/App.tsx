@@ -3,6 +3,8 @@ import { RgbColor, RgbColorPicker } from "react-colorful";
 import { WSHelperClient } from "../../WSHelper";
 import { ErrorBoundary } from "react-error-boundary";
 import DOMUtils from "../../utils/DOMUtils";
+import Thinker from "../Thinker/Thinker";
+import { ServerWebsocketDataMap } from "../../../dist/typings";
 
 interface AppProps {}
 
@@ -16,12 +18,22 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 		fetch("wsPort")
 			.then(r => r.json())
 			.then(({ wsPort }: { wsPort: number }) => {
-				const ws = new WSHelperClient<{ color: Color }>(`ws://${location.hostname}:${wsPort}/`);
+				const ws = new WSHelperClient<ServerWebsocketDataMap>(`ws://${location.hostname}:${wsPort}/`);
 				ws.open();
-				ws.addMessageListener("color", ([r, g, b]) => setColor({ r, g, b }));
+				ws.addMessageListener("colorData", colorData => {
+					switch (colorData.type) {
+						case "solidColor":
+							const [r, g, b] = colorData.color;
+							setColor({ r, g, b })
+							break;
+					}
+				});
 				ws.addEventListener("open", () => setLoading(false));
 				ws.addEventListener("close", () => setLoading(true));
-				setColorRef.current = ({r, g, b}) => ws.send("color", [r, g, b]);
+				setColorRef.current = ({r, g, b}) => ws.send("colorData", {
+					type: "solidColor",
+					color: [r, g, b],
+				});
 			});
 	}, []);
 
@@ -56,6 +68,5 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
 export default App;
 
-import "./App.style";import Thinker from "../Thinker/Thinker";
-import { Color } from "../../../dist/typings";
+import "./App.style";
 
