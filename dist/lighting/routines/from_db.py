@@ -28,7 +28,7 @@ def watch_file():
 		colors_string = db.get("colors") or "0,0,0"
 
 		lines = colors_string.splitlines()
-		write_time = db.get("write_time")
+		write_time = float(db.get("write_time") or 0)
 
 		if not write_time:
 			logging.warn("Could not read write_time, using default 0")
