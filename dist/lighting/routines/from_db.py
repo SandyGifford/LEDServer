@@ -7,7 +7,6 @@ from consts import COLOR_FILE_PATH, REDIS_PORT
 from collections import namedtuple
 import logging
 import os
-
 import redis
 
 db = redis.Redis(
@@ -40,7 +39,7 @@ def watch_file():
 			try:
 				split = color_str.split(",")
 				colors.append((int(split[0]), int(split[1]), int(split[2])))
-			except e:
+			except BaseException as e:
 				logging.warn("Could not read line " + str(i) + " of color file, skipping")
 				logging.error(e)
 
