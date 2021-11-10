@@ -1,5 +1,5 @@
 from PixelGroup.PixelGroupChain import PixelGroupChain
-from dist.lighting.consts import LED_COUNT
+from consts import LED_COUNT
 
 def off():
 	chain = PixelGroupChain([LED_COUNT])

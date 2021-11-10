@@ -1,6 +1,6 @@
 import math
 import asyncio
-from dist.lighting.consts import LED_CONFIG
+from consts import LED_CONFIG
 from utils.py_utils import run_loop
 from PixelGroup.PixelGroupChain import PixelGroupChain
 

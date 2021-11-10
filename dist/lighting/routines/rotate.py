@@ -1,7 +1,7 @@
 import math
 import time
 import asyncio
-from dist.lighting.consts import LED_COUNT
+from consts import LED_COUNT
 from utils.py_utils import run_loop
 from utils.light_utils import make_multi_grad
 from PixelGroup.PixelGroupChain import PixelGroupChain

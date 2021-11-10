@@ -7,9 +7,10 @@ from utils.light_utils import make_fill, to_pixels, get_faded_pixel
 from PixelGroup.PixelGroup import PixelGroup
 
 class PixelGroupChain:
-	def __init__(self, groups, GPIO=board.D18, pixels=None, frames_per_second=50):
+	def __init__(self, pixel_config, GPIO=board.D18, pixels=None, frames_per_second=50):
 		size = 0
-		for g in groups: size += g
+		for g in pixel_config: size += g
+
 		self._size = size
 		self._pixels = pixels if pixels else neopixel.NeoPixel(GPIO, size, auto_write=False)
 		self._queue = []
@@ -17,7 +18,7 @@ class PixelGroupChain:
 		self._groups = []
 		offset = 0
 		
-		for size in groups:
+		for size in pixel_config:
 			self._groups.append(PixelGroup(size, GPIO=GPIO, offset=offset, pixels=self._pixels, frames_per_second=frames_per_second))
 			offset += size
 
@@ -54,8 +55,10 @@ class PixelGroupChain:
 		await self._groups[index].fade_to_async(color_or_pixels, seconds)
 
 	async def fade_to_all_async(self, color_or_pixels, seconds):
+		pixels = to_pixels(color_or_pixels, self._size)
+
 		coroutines = map(
-			(lambda group: group.fade_to_async(color_or_pixels, seconds)),
+			lambda group: group.fade_to_async(pixels[group._offset:(group._size + group._offset)], seconds),
 			self._groups
 		)
 
