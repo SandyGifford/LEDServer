@@ -7,7 +7,7 @@ export interface ServerWebsocketDataMap {
 export type ColorData = SolidColorColorData | GradientColorData;
 export type ColorDataType = ColorData["type"];
 
-export type GQLTypeMap = {
+export type ColorDataMap = {
 	[T in ColorDataType]: Extract<ColorData, { type: T }>;
 };
 

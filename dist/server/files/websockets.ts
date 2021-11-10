@@ -7,11 +7,6 @@ const db = redis.createClient({
 	port: REDIS_PORT,
 });
 
-let colorData: ColorData = {
-	type: "solidColor",
-	color: [255, 0, 255]
-};
-
 class AssertionException extends Error {}
 
 function assert(assertion: boolean, message: string): void {
@@ -22,7 +17,11 @@ const server = new WSSHelperServer<ServerWebsocketDataMap>(WS_PORT);
 
 server.onConnected((client, ip) => {
 	console.log(`Opened websocket connection to ${ip}`);
-	client.send("colorData", colorData);
+	db.get("colorData", (error, data) => {
+		if (error) throw error;
+		if (typeof data !== "string") throw new Error("Could not find response from Redis");
+		client.send("colorData", JSON.parse(data));
+	});
 	client.addMessageListener("colorData", colorData => sendColorData(colorData, client));
 	client.addEventListener("close", () => console.log(`Closed websocket connection to ${ip}`));
 });
