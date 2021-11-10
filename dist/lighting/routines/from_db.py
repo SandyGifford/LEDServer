@@ -18,7 +18,7 @@ db = redis.Redis(
 
 ColorFileData = namedtuple("ColorFileData", ["write_time", "colors"])
 
-def watch_file():
+def from_db():
 	PIXEL_COUNT = 120
 	chain = PixelGroupChain([PIXEL_COUNT])
 
