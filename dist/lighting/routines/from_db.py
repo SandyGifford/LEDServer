@@ -3,10 +3,19 @@ from dist.lighting.consts import LED_CONFIG
 from utils.py_utils import run_loop
 from utils.light_utils import make_multi_grad
 from PixelGroup.PixelGroupChain import PixelGroupChain
-from consts import COLOR_FILE_PATH
+from consts import COLOR_FILE_PATH, REDIS_PORT
 from collections import namedtuple
 import logging
 import os
+
+import redis
+
+db = redis.Redis(
+	host="localhost",
+	port=REDIS_PORT,
+	decode_responses=True
+)
+
 
 ColorFileData = namedtuple("ColorFileData", ["write_time", "colors"])
 
@@ -16,25 +25,18 @@ def watch_file():
 	if (not os.path.exists(COLOR_FILE_PATH)): open(COLOR_FILE_PATH, "x").close()
 
 	def read_colors():
-		color_file = open(COLOR_FILE_PATH, "r")
-		string = color_file.read() or "0,0,0"
-		color_file.close()
+		colors_string = db.get("colors") or "0,0,0"
 
-		lines = string.splitlines()
+		lines = colors_string.splitlines()
+		write_time = float(db.get("write_time") or 0)
 
-		write_time = time.time()
-		colors = [(0, 0, 0)]
-
-		try:
-			write_time = int(lines[0])
-		except BaseException as e:
+		if not write_time:
 			logging.warn("Could not read write_time, using default 0")
-			logging.error(e)
+			write_time = 0
 
-		color_lines = lines[1:]
 		colors = []
 
-		for i, color_str in enumerate(color_lines):
+		for i, color_str in enumerate(lines):
 			try:
 				split = color_str.split(",")
 				colors.append((int(split[0]), int(split[1]), int(split[2])))

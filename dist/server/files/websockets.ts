@@ -1,10 +1,12 @@
 import { WSHelperServer, WSSHelperServer } from "wshelper";
 import { Color } from "../../../src/typings/color";
 import { ServerWebsocketDataMap } from "../typings";
-import { COLOR_FILE_PATH, WS_PORT } from "./consts";
-import fs from "fs-extra";
+import { REDIS_PORT, WS_PORT } from "./consts";
+import redis from "redis";
 
-fs.ensureFileSync(COLOR_FILE_PATH);
+const db = redis.createClient({
+	port: REDIS_PORT,
+});
 
 let _color: Color = [255, 0, 255];
 
@@ -38,6 +40,7 @@ function sendColor(color: Color, fromClient: WSHelperServer<ServerWebsocketDataM
 	));
 
 	_color = color;
-	fs.writeFile(COLOR_FILE_PATH, Math.floor(new Date().getTime() / 1000) + "\n" + color.join(","));
+	db.set("colors", color.join(","))
+	db.set("write_time", Math.floor(new Date().getTime() / 1000) + "");
 	server.sendToAllExcept("color", [fromClient], color);
 }
