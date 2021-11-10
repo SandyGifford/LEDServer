@@ -2,7 +2,7 @@ import time
 from utils.py_utils import run_loop
 from utils.light_utils import make_multi_grad
 from PixelGroup.PixelGroupChain import PixelGroupChain
-from consts import COLOR_FILE_PATH, REDIS_PORT, LED_CONFIG, LED_COUNT
+from consts import REDIS_PORT, LED_CONFIG, LED_COUNT
 from collections import namedtuple
 import logging
 import os
@@ -19,8 +19,6 @@ ColorFileData = namedtuple("ColorFileData", ["write_time", "colors"])
 
 def from_db():
 	chain = PixelGroupChain(LED_CONFIG)
-
-	if (not os.path.exists(COLOR_FILE_PATH)): open(COLOR_FILE_PATH, "x").close()
 
 	def read_colors():
 		colors_string = db.get("colors") or "0,0,0"
