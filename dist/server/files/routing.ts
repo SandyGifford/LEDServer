@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import { BUILD_PATH, WS_PORT } from "./consts";
+import { BUILD_PATH, WS_PORT } from "./serverConsts";
 
 const app = express();
 

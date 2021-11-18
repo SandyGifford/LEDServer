@@ -1,6 +1,6 @@
 console.clear();
 import express from "express";
-import { WEB_PORT } from "./files/consts";
+import { WEB_PORT } from "./files/serverConsts";
 import routing from "./files/routing";
 import "./files/websockets";
 

@@ -1,11 +1,16 @@
+import { UnionToTuple } from "./global";
+
 export type Color = [number, number, number];
 
-export interface ServerWebsocketDataMap {
+export type ServerWebsocketDataMap = {
+	activeColorDataType: ColorDataType;
+	colorDataMap: ColorDataMap;
 	colorData: ColorData;
 }
 
 export type ColorData = SolidColorColorData | GradientColorData;
 export type ColorDataType = ColorData["type"];
+export type ColorDataTypeTuple = UnionToTuple<ColorDataType>;
 
 export type ColorDataMap = {
 	[T in ColorDataType]: Extract<ColorData, { type: T }>;

@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
+import { ColorDataMap } from "../../typings";
 dotenv.config()
 
 function resolveEnvKey(key: string, defaultValue: string): string {
@@ -25,3 +26,14 @@ export const SERVER_ENV = resolveEnvKey("SERVER_ENV", "DEV") as ServerEnv;
 export const LED_CONFIG = resolveEnvKey("LED_CONFIG", "60,60").split(",").map(i => parseInt(i));
 export const LED_COUNT = LED_CONFIG.reduce((count, i) => count + i, 0);
 export const REDIS_PORT = parseInt(resolveEnvKey("REDIS_PORT", "6379"));
+
+export const DEFAULT_COLOR_DATA: ColorDataMap = Object.freeze({
+	gradient: {
+		type: "gradient",
+		stops: [{ frac: 0, color: [255, 0, 255] }, { frac: 0, color: [0, 255, 0] }],
+	},
+	solidColor: {
+		type: "solidColor",
+		color: [255, 0, 255],
+	},
+});

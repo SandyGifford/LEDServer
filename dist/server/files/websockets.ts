@@ -1,83 +1,37 @@
-import { WSHelperServer, WSSHelperServer } from "wshelper";
-import { Color, ColorData, ServerWebsocketDataMap } from "../../typings";
-import { REDIS_PORT, WS_PORT } from "./consts";
-import redis from "redis";
+import { WSSAssistantServer } from "ws-assistant-server";
+import { ServerWebsocketDataMap } from "../../typings";
+import { WS_PORT } from "./serverConsts";
+import { readColorDataMapFromDb, readActiveColorDataTypeFromDb, writeColorDataMapToDb, writeColorDataToDb, writeActiveColorDataTypeToDb } from "./db";
 
-const db = redis.createClient({
-	port: REDIS_PORT,
-});
+const server = new WSSAssistantServer<ServerWebsocketDataMap>(WS_PORT);
 
-class AssertionException extends Error {}
-
-function assert(assertion: boolean, message: string): void {
-	if (!assertion) throw new AssertionException(message);
-}
-
-const server = new WSSHelperServer<ServerWebsocketDataMap>(WS_PORT);
-
-server.onConnected((client, ip) => {
+server.onConnected(async (client, ip) => {
 	console.log(`Opened websocket connection to ${ip}`);
-	db.get("colorData", (error, data) => {
-		if (error) throw error;
-		if (typeof data !== "string") throw new Error("Could not find response from Redis");
-		client.send("colorData", JSON.parse(data));
+
+	client.addMessageListener("colorDataMap", colorDataMap => {
+		writeColorDataMapToDb(colorDataMap);
+		server.sendToAllExcept("colorDataMap", [client], colorDataMap);
 	});
-	client.addMessageListener("colorData", colorData => sendColorData(colorData, client));
+
+	client.addMessageListener("activeColorDataType", activeColorDataType => {
+		writeActiveColorDataTypeToDb(activeColorDataType);
+	});
+
+	client.addMessageListener("colorData", colorData => {
+		writeColorDataToDb(colorData);
+		server.sendToAllExcept("colorData", [client], colorData);
+	});
+
+	const [
+		activeColorDataType,
+		colorDataMap,
+	] = await Promise.all([
+		readActiveColorDataTypeFromDb(),
+		readColorDataMapFromDb(),
+	]);
+
+	client.send("activeColorDataType", activeColorDataType);
+	client.send("colorDataMap", colorDataMap);
+
 	client.addEventListener("close", () => console.log(`Closed websocket connection to ${ip}`));
 });
-
-function assertColor(color: Color): void {
-	assert(Array.isArray(color), "color must be an array");
-	assert(color.length === 3, "color must have exactly 3 components");
-	color.forEach((comp, i) => {
-		assert(typeof comp === "number" && comp === Math.abs(comp), `color component at index ${i} is not an integer`);
-		assert(comp >= 0 && comp <= 255, `color component at index ${i} must be between 0 and 255`);
-	})
-}
-
-function assertColorData(colorData: ColorData): ColorData {
-	assert(
-		typeof colorData === "object",
-		"color data is not an object"
-	);
-
-	assert(
-		typeof colorData.type === "string",
-		"color data must have a 'type' of type string"
-	);
-
-	switch (colorData.type) {
-		case "gradient":
-			assert(colorData.stops.length <= 20, "gradient may not contain more than 20 stops");
-			const stops = colorData.stops.map((stop, i) => {
-				assert(typeof stop.frac === "number", `gradient stop at position ${i} must be a number`);
-				assertColor(stop.color);
-
-				return {
-					frac: stop.frac,
-					color: stop.color,
-				};
-			});
-
-			return {
-				type: "gradient",
-				stops,
-			};
-		case "solidColor":
-			assertColor(colorData.color);
-			return {
-				type: "solidColor",
-				color: colorData.color,
-			};
-		default:
-			throw new AssertionException(`unrecognized type '${(colorData as ColorData).type}'`)
-	}
-}
-
-function sendColorData(colorData: ColorData, fromClient: WSHelperServer<ServerWebsocketDataMap>): void {
-	colorData = assertColorData(colorData);
-
-	db.set("colorData", JSON.stringify(colorData));
-	db.set("write_time", Math.floor(new Date().getTime() / 1000) + "");
-	server.sendToAllExcept("colorData", [fromClient], colorData);
-}
