@@ -4,3 +4,4 @@ node_modules
 .venv
 .DS_store
 __pycache__/
+dump.rdb
