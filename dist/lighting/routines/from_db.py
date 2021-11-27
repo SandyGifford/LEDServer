@@ -7,6 +7,7 @@ from collections import namedtuple
 import logging
 import os
 import redis
+import json
 
 db = redis.Redis(
 	host="localhost",
@@ -17,34 +18,19 @@ db = redis.Redis(
 def from_db():
 	chain = PixelGroupChain(LED_CONFIG)
 
-
 	def read_write_time():
-		write_time = float(db.get("write_time") or 0)
+		write_time = float(db.get("lastWrite") or 0)
 
 		if not write_time:
-			logging.warn("Could not read write_time, using default 0")
+			logging.warn("Could not read lastWrite, using default 0")
 			write_time = 0
 
 		return write_time
 
 	def read_colors():
-		colors_string = db.get("colors") or "0,0,0"
+		color_data = json.loads(db.get("solidColor") or "{\"type\":\"solidColor\",\"color\":[0,0,0]}")
 
-		lines = colors_string.splitlines()
-
-		colors = []
-
-		for i, color_str in enumerate(lines):
-			try:
-				split = color_str.split(",")
-				colors.append((int(split[0]), int(split[1]), int(split[2])))
-			except BaseException as e:
-				logging.warn("Could not read line " + str(i) + " of color file, skipping")
-				logging.error(e)
-
-		if len(colors) == 0: colors = [(0, 0, 0)]
-
-		return colors
+		return [color_data["color"]]
 
 	def render_pixels(colors):
 		chain.fade_to_all(make_multi_grad(colors, LED_COUNT), 0.5)
