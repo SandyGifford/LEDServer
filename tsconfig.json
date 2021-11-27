@@ -14,5 +14,5 @@
 		"moduleResolution": "node",
 		"allowJs": true,
 	},
-	"exclude": [ "docs", "*.js" ]
+	"exclude": [ "docs", "*.js", "dist" ]
 }

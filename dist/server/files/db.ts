@@ -48,7 +48,7 @@ export async function writeColorDataToDb(colorData: ColorData): Promise<void> {
 export async function writeColorDataMapToDb(colorDataMap: ColorDataMap): Promise<void> {
 	const [activeColorDataType] = await Promise.all([
 		readActiveColorDataTypeFromDb(),
-		Promise.all(Object.keys(colorDataMap).map((colorDataType: ColorDataType) => {
+		Promise.all((Object.keys(colorDataMap) as ColorDataType[]).map((colorDataType: ColorDataType) => {
 			return dbSet(colorDataType, JSON.stringify(colorDataMap[colorDataType]));
 		})),
 	]);

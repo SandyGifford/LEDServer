@@ -1,10 +1,5 @@
+import assert, { AssertionError } from "assert";
 import { Color, ColorData } from "../../typings";
-
-class AssertionException extends Error {}
-
-function assert(assertion: boolean, message: string): void {
-	if (!assertion) throw new AssertionException(message);
-}
 
 export function assertColor(color: Color): void {
 	assert(Array.isArray(color), "color must be an array");
@@ -50,6 +45,8 @@ export function assertColorData(colorData: ColorData): ColorData {
 				color: colorData.color,
 			};
 		default:
-			throw new AssertionException(`unrecognized type '${(colorData as ColorData).type}'`)
+			throw new AssertionError({
+				message: `unrecognized type '${(colorData as ColorData).type}'`
+			});
 	}
 }
