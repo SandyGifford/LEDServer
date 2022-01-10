@@ -24,6 +24,8 @@ def get_arg_names(fn):
 	return fn.__code__.co_varnames[:fn.__code__.co_argcount]
 
 def do_routine(routine_name):
+	if routine_name not in routine_map: print("No routine named " + "\"" + routine_name + "\"")
+
 	routine = routine_map[routine_name]
 	routine_args = get_arg_names(routine)
 	call_args = {}
@@ -44,8 +46,17 @@ def do_routine(routine_name):
 
 	routine(**call_args)
 
+def print_help(routine_name):
+	if routine_name not in routine_map: print("No routine named \"%s\"" % routine_name)
+	arg_str = ", ".join(get_arg_names(routine_map[routine_name]))
+	if arg_str is "": arg_str = "** no arguments **"
+	print("{routine_name:>20}: {arg_str}".format(routine_name=routine_name, arg_str=arg_str))
+
 if routine_name == None:
 	print("No routine specified, turning off")
 	off()
-elif routine_name not in routine_map: print("No routine named " + "\"" + routine_name + "\"")
+elif routine_name == "help":
+	if len(cli_args) >= 1: print_help(cli_args[0])
+	else:
+		for r in routines: print_help(r.__name__)
 else: do_routine(routine_name)
