@@ -2,6 +2,8 @@ import sys
 from utils.logging_utils import init_logging
 init_logging()
 
+import logging
+
 from routines.from_db import from_db
 from routines.pulse import pulse
 from routines.swap import swap
@@ -10,15 +12,7 @@ from routines.noise import noise
 from routines.rotate import rotate
 from routines.off import off
 
-routine_name = sys.argv[1] if len(sys.argv) >= 2 else None
-cli_args = sys.argv[2:]
-
 routines = [from_db, pulse, swap, static_rainbow, noise, rotate, off]
-
-routine_map = {}
-
-for r in routines:
-	routine_map[r.__name__] = r
 
 def get_arg_names(fn):
 	return fn.__code__.co_varnames[:fn.__code__.co_argcount]
@@ -39,8 +33,7 @@ def do_routine(routine_name):
 			arg_name = split[0]
 			arg_val = split[1]
 
-		if "," in arg_val: arg_val = tuple(map(int, arg_val.split(",")))
-		else: arg_val = float(arg_val)
+		arg_val = eval(arg_val)
 
 		call_args[arg_name] = arg_val
 
@@ -51,6 +44,17 @@ def print_help(routine_name):
 	arg_str = ", ".join(get_arg_names(routine_map[routine_name]))
 	if arg_str is "": arg_str = "** no arguments **"
 	print("{routine_name:>20}: {arg_str}".format(routine_name=routine_name, arg_str=arg_str))
+
+
+
+routine_name = sys.argv[1] if len(sys.argv) >= 2 else None
+cli_args = sys.argv[2:]
+routine_map = {}
+
+for r in routines:
+	routine_map[r.__name__] = r
+
+
 
 if routine_name == None:
 	print("No routine specified, turning off")
